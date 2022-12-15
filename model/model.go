@@ -10,24 +10,23 @@ import (
 )
 
 type Person struct {
-	Name string    `bson:"name"` 
-	Age int        `bson:"age"`
-	Pnum string    `bson:"pnum"`
+	Name string       `bson:"name"` 
+	Email int         `bson:"email"`
+	Password string   `bson:"password"`
+	Created_at string `bson:"created_at"`
+	Updated_at string `bson:"updated_at"`
 }
 
-func main() {
-	Mongo_URL := "mongodb://127.0.0.1:27017"
-	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(Mongo_URL))
+func (a Person) PostPerson() {
+	client, err := Connect()
+	coll := client.Database("shoe-resell").Collection("tPerson")
+
+	// example
+	newPerson := Person{Name: "test", Email: 20, Password: "asd23", Created_at: "0318894561", Updated_at: "114314" }
+
+	result, err := coll.InsertOne(context.TODO(), newPerson)
 	if err != nil {
 		panic(err)
 	}
-
-	coll := client.Database("shoe-resell").Collection("tPerson")
-
-	defer func() {
-		if err = client.Disconnect(context.TODO()); err != nil { 
-			panic(err)
-		}
-	}()
-
+	fmt.Printf("Document inserted with ID: %s\n", result.InsertedID)
 }
