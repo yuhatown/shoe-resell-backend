@@ -3,28 +3,24 @@ package model
 import (
 	"context"
 	"fmt"
+	"time"
 
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type Person struct {
+type User struct {
 	Name string       `bson:"name"` 
 	Email int         `bson:"email"`
 	Password string   `bson:"password"`
-	Created_at string `bson:"created_at"`
-	Updated_at string `bson:"updated_at"`
+	Created_at time.Time `bson:"created_at"`
+	Updated_at *time.Time `bson:"updated_at"`
 }
 
-func (a Person) PostPerson() {
+func (a *User) PostUserModel() {
 	client, err := Connect()
 	coll := client.Database("shoe-resell").Collection("tPerson")
 
 	// example
-	newPerson := Person{Name: "test", Email: 20, Password: "asd23", Created_at: "0318894561", Updated_at: "114314" }
-
-	result, err := coll.InsertOne(context.TODO(), newPerson)
+	result, err := coll.InsertOne(context.TODO(), a)
 	if err != nil {
 		panic(err)
 	}
